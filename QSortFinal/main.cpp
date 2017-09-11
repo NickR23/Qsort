@@ -8,21 +8,20 @@
 
 #include <iostream>
 using namespace std;
-const int arrysze=8;
 
+int check1=0;
+int check2=0;
+int check3=0;
+int check4=0;
+int check5=0;
 
-void ref(int num[], int s , int e){
-    cout<<"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
-    cout<<"Start = "<<s<<endl<<"End = "<<e<<endl;
-    cout<<"List: "<<endl;
-    for(int i=0;i<arrysze;i++){
-        cout<<num[i]<<",";
-    }
-    cout<<endl;
-    
+const int arrysze = 10;
+
+void switcher(int num[],int i,int c){
+    int hold=num[i];
+    num[i]=num[c];
+    num[c]=hold;
 }
-
-
 
 void checker(int num[]){
     bool check=true;
@@ -47,68 +46,51 @@ void checker(int num[]){
     }cout<<"\n\n\n\n\n";
 }
 
+
 void Qsort(int num[],int s,int e){
-    ref(num,s,e);
-    
+    check1++;
     int p=s-1;
     int f=s;
     int l=e;
     
-    int pval=num[p];
-    int fval=num[f];
-    int lval=num[l];
+    if(s!=e){
+    check2++;
+        while(num[p]<=num[l]&&(l!=p+1)){
+            l--;
+        }
+        while(num[p]>num[f]&&(f<e)){
+            f++;
+        }
+            if(s==e && num[p]>num[e]){
+                switcher(num,p,e);
+            }
+            else if(f>l&&e-s>=2){
+                switcher(num,p,l);
+                check5++;
+                Qsort(num,s,l-1);
+                Qsort(num,l+2,e);
+            }
+            else if(f<l){
+                switcher(num,f,l);
+                Qsort(num,s,e);
+            }
+            else if(f==e){
+                switcher(num,p,l);
+                check4++;
+                Qsort(num,s,e-1);
+            }
+            else if(f==l){
+                check3++;
+                Qsort(num,s+1,e);
+            }
+        }
     
-    cout<<"Pval = "<<pval<<endl<<"Fval = "<<fval<<endl<<"Lval = "<<lval<<endl;
-    cout<<"#################"<<endl;
-    while(num[p]<=num[l]&&(l!=p+1)){
-        l--;
-        lval=num[l];
-    }
-    //f is able to get too large!!
-    while(num[p]>num[f]&&(f<e)){
-        f++;
-        fval=num[f];
-    }
-    cout<<"Pval = "<<pval<<endl<<"Fval = "<<fval<<endl<<"Lval = "<<lval<<endl;
-    
-    if(s==e && num[p]>num[e]){
-        int hold=num[p];
-        num[p]=num[e];
-        num[e]=hold;
-        cout<<"Switched two vals";
-    }
-    else if(f>l&&e-s>=2){
-        cout<<"@Switching pivot("<<num[p]<<") ~and~ lval("<<num[l]<<") ........";
-        num[p]=num[l];
-        num[l]=pval;
-        Qsort(num,s,l-1);
-        Qsort(num,l+2,e);
-        
-        
-    }
-    else if(f<l){
-        cout<<"$Switching fval("<<num[f]<<") ~and~ lval("<<num[l]<<") ........";
-        
-        num[f]=num[l];
-        num[l]=fval;
-        Qsort(num,s,e);
-    }
-    else if(f==e){
-        cout<<"#LEFT SIDE NEXT @Switching pivot("<<num[p]<<") ~and~ lval("<<num[l]<<") ........";
-        num[p]=num[l];
-        num[l]=pval;
-        Qsort(num,s,e-1);
-    }
-    else if(f==l){
-        Qsort(num,s+1,e);
+    else{
+        if(num[p]>num[s]){
+            switcher(num,p,s);
+        }
     }
     
-    
-    ref(num,s,e);
-    cout<<"Pval = "<<num[p]<<endl<<"Fval = "<<num[f]<<endl<<"Lval = "<<num[l]<<endl;
-    
-    
-    checker(num);
 }
 
 
@@ -118,19 +100,41 @@ void Qsort(int num[],int s,int e){
 int main() {
     int num[arrysze];
     int s,e;
-    num[0]=87;
-    num[1]=23;
-    num[2]=13;
-    num[3]=10;
-    num[4]=9;
-    num[5]=8;
-    num[6]=2;
-    num[7]=1;
+    num[0]=1;
+    num[1]=2;
+    num[2]=-1;
+    num[3]=-2;
+    num[4]=3;
+    num[5]=4;
+    num[6]=-3;
+    num[7]=-4;
+    num[8]=5;
+    num[9]=6;
+    cout<<"Initial string: ";
+    for(int i=0;i<arrysze;i++){
+        cout<<num[i];
+        if(i!=arrysze+1){
+            cout<<",";
+        }
+    }cout<<endl;
     
     s=1;
     e=arrysze-1;
     Qsort(num,s,e);
-    cout<<"Done :)"<<endl;
+    cout<<"Final string: ";
+    for(int i=0;i<arrysze;i++){
+        cout<<num[i];
+        if(i!=arrysze+1){
+            cout<<",";
+        }
+    }cout<<endl;
+    //Checks if the array is actually sorted
+    checker(num);
     
+    cout<<"Check 1: "<<check1<<endl;
+    cout<<"Check 2: "<<check2<<endl;
+    cout<<"Check 3: "<<check3<<endl;
+    cout<<"Check 4: "<<check4<<endl;
+    cout<<"Check 5: "<<check5<<endl;
     
 }
